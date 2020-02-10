@@ -14,7 +14,6 @@ export class GuildsResolverService implements Resolve<Guild[]> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const guilds = this.guildsService.getGuilds();
-    console.log("Resolving");
     return guilds.length > 0 ? guilds : this.guildsService.fetchGuilds();
   }
 }

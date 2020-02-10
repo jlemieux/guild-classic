@@ -1,5 +1,6 @@
 <div class="row">
   <div class="col-12">
+    <h2 *ngIf="guilds.length === 0">You have no guilds!</h2>
     <div class="card" *ngFor="let guild of guilds">
       <div class="card-body">
         <h5 class="card-title">{{ guild.name }}</h5>

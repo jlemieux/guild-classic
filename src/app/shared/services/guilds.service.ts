@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Guild } from '../models/guild.model';
 import { HttpClient } from '@angular/common/http';
-import { filter, map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -44,7 +44,9 @@ export class GuildsService {
 
   fetchGuilds() {
     return this.http.get<Guild[]>(this.guildsUrl).pipe(
-      filter(guilds => !!guilds),
+      map(guilds => {
+        return guilds === null ? [] : guilds;
+      }),
       tap(guilds => {
         this.setGuilds(guilds);
       })
