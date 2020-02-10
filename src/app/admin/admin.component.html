@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-3">
+    <ul class="nav flex-column nav-pills">
+      <li class="nav-item"
+          routerLinkActive="active">
+        <a class="nav-link" routerLink="characters">Characters</a>
+      </li>
+      <li class="nav-item"
+          routerLinkActive="active">
+          <a class="nav-link" routerLink="guilds">Guilds</a>
+      </li>
+      <li class="nav-item"
+          routerLinkActive="active">
+          <a class="nav-link" routerLink="settings">Settings</a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-9">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<!-- <ul class="nav nav-pills">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="pill" href="#driver-details-tab">Driver Details</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="pill" href="#erer">Register Driver</a>
+  </li>
+</ul> -->

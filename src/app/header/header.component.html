@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="navbar-header">
+    <a class="navbar-brand" routerLink="/">Guild Classic</a>
+  </div>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#dropdown1">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: true}">
+        <a class="nav-link" routerLink="/">Home</a>
+      </li>
+      <ng-container *ngIf="isAuthenticated">
+        <li class="nav-item"
+            routerLinkActive="active">
+          <a class="nav-link" routerLink="/characters">My Characters</a>
+        </li>
+        <li class="nav-item"
+            routerLinkActive="active">
+          <a class="nav-link" routerLink="/guilds">My Guilds</a>
+        </li>
+        <li class="nav-item"
+            routerLinkActive="active">
+          <a class="nav-link" routerLink="/settings">Settings</a>
+        </li>
+        <li class="nav-item"
+            routerLinkActive="active">
+          <a class="nav-link" style="cursor: pointer;" (click)="onLogout()">Logout</a>
+        </li>
+      </ng-container>
+      <li class="nav-item"
+          routerLinkActive="active"
+          *ngIf="!isAuthenticated">
+        <a class="nav-link" routerLink="/auth">Login</a>
+      </li>
+    </ul>
+  </div>
+</nav>
