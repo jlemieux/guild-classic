@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class KebabCasePipe implements PipeTransform {
 
   transform(value: any, ...args: any[]): any {
-    return value.toString().toLowerCase().replace(' ', '-');
+    return value.toString().toLowerCase().replace(new RegExp(' ', 'g'), '-');
   }
 
 }

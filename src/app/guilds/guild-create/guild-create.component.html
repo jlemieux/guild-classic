@@ -1,0 +1,30 @@
+<div *ngIf="isLoading" style="text-align:center;">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+<div class="alert alert-danger" *ngIf="error">
+  <p>{{ error }}</p>
+  <button class="btn btn-danger" (click)="onHandleError()">
+    Okay
+  </button>
+</div>
+<div class="alert alert-success" *ngIf="success">
+  <p>{{ success }}</p>
+</div>
+<form #guildForm="ngForm" (ngSubmit)="onSubmit(guildForm)" *ngIf="!isLoading">
+  <div class="form-group">
+    <label for="name">Guild Name</label>
+    <input
+      type="text"
+      id="name"
+      class="form-control"
+      ngModel
+      name="name"
+      required
+    >
+  </div>
+  <div>
+    <button class="btn btn-primary" type="submit" [disabled]="!guildForm.valid">
+      Create Guild
+    </button>
+  </div>
+</form>

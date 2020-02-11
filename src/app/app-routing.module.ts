@@ -16,12 +16,13 @@ import { GuildGuard } from './guild/guild.guard';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'characters', component: CharactersComponent, canActivate: [AuthGuard] },
-  { path: 'characters/:name', component: CharacterComponent, canActivate: [AuthGuard] },
+  { path: 'character/:id', component: CharacterComponent, canActivate: [AuthGuard] },
   { path: 'guilds', component: GuildsComponent, canActivate: [AuthGuard], resolve: [GuildsResolverService] },
-  { path: 'guilds/:name', component: GuildComponent, canActivate: [GuildGuard], resolve: [GuildsResolverService] },
+  { path: 'guild/:id', component: GuildComponent, canActivate: [AuthGuard], resolve: [GuildsResolverService] },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
   { path: 'auth', component: AuthComponent },
-  { path: '**', component: ErrorPageComponent, data: {message: 'Page not found!'} }
+  { path: '404', component: ErrorPageComponent, data: {message: 'Page not found!'} },
+  { path: '**', redirectTo: '404' }
 ];
 
 @NgModule({

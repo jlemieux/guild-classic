@@ -17,7 +17,7 @@ import { HeaderComponent } from './header/header.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { KebabCasePipe } from './shared/pipes/kebab-case.pipe';
-
+import { GuildCreateComponent } from './guilds/guild-create/guild-create.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +32,8 @@ import { KebabCasePipe } from './shared/pipes/kebab-case.pipe';
     AuthComponent,
     HeaderComponent,
     LoadingSpinnerComponent,
-    KebabCasePipe
+    KebabCasePipe,
+    GuildCreateComponent
   ],
   imports: [
     BrowserModule,
