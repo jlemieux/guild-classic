@@ -1,0 +1,15 @@
+interceptor adds tokens/modifies requests as it comes through. module level
+
+guards say whether or not you can access this page ( if {!!authService.user} )
+
+services handle data endpoints/observables. they store data in private. public subject for onChanged
+
+componenents interested in the data sub to onChanged, as well as .getData() to get initally, prechanged values
+
+resolvers wait for an observable response before loading component. i.e. wait for recipes.fetch() to resolve, then load the page
+
+
+
+services hit backend with obs req (this.http.post). You supply return type of body (or observe request instead). Then,
+	pipe() and then catchError(this.handleError). Then tap() service needs (store objects, delete them). then let pass.
+	subscribe in component if needed, otherwise in service.
