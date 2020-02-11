@@ -20,8 +20,8 @@ export class GuildsService {
     private http: HttpClient
   ) { }
 
-  getGuild(id: string) {
-    return this.guilds.find(guild => guild.id === id);
+  getGuild(guildId: string) {
+    return this.guilds.find(guild => guild.id === guildId);
   }
 
   getGuilds() {
@@ -34,10 +34,7 @@ export class GuildsService {
     ).pipe(
       catchError(this.handleError),
       map(fetchedGuilds => {
-        if (fetchedGuilds === null) {
-          return [];
-        }
-        const guilds = [];
+        const guilds: Guild[] = [];
         for (let id in fetchedGuilds) {
           guilds.push(new Guild(fetchedGuilds[id].name, id));
         }
@@ -51,7 +48,7 @@ export class GuildsService {
 
   private setGuilds(guilds: Guild[]) {
     this.guilds = guilds;
-    this.guildsChanged.next(this.guilds.slice());
+    this.guildsChanged.next(this.getGuilds());
   }
 
   addGuild(guildName: string) {
@@ -69,7 +66,7 @@ export class GuildsService {
 
   private _addGuild(guild: Guild) {
     this.guilds.push(guild);
-    this.guildsChanged.next(this.guilds.slice());
+    this.guildsChanged.next(this.getGuilds());
   }
 
   deleteGuild(guildId: string) {
@@ -83,10 +80,10 @@ export class GuildsService {
     );
   }
 
-  private _deleteGuild(id: string) {
+  private _deleteGuild(guildId: string) {
     //this.guilds.splice(index, 1);
-    this.guilds = this.guilds.filter(guild => guild.id !== id);
-    this.guildsChanged.next(this.guilds.slice());
+    this.guilds = this.guilds.filter(guild => guild.id !== guildId);
+    this.guildsChanged.next(this.getGuilds());
   }
 
   private handleError(errorResp: HttpErrorResponse) {

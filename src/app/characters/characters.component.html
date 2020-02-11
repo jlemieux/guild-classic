@@ -1,11 +1,16 @@
-<div class="container">  
+<div class="container-fluid">
   <div class="row">
-    <div class="col-12">
+    <div class="col-3">
+      <app-character-create></app-character-create>
+    </div>
+    <div class="col-9">
+      <h2 *ngIf="characters.length === 0">You have no characters!</h2>
       <div class="card" *ngFor="let character of characters">
         <div class="card-body">
           <h5 class="card-title">{{ character.name }}</h5>
           <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a [routerLink]="character.name | kebabCase" class="btn btn-primary">Button</a>
+          <a [routerLink]="['/character', character.id]" class="btn btn-primary">Go</a>
+          <button class="btn btn-danger" type="button" (click)="onDeleteCharacter(character)">Delete</button>
         </div>
       </div>
     </div>

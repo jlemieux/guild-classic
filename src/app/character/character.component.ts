@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Character } from './character.model';
+import { CharactersService } from '../characters/characters.service';
 
 @Component({
   selector: 'app-character',
@@ -8,14 +10,21 @@ import { ActivatedRoute, Params } from '@angular/router';
 })
 export class CharacterComponent implements OnInit {
 
-  name: string;
+  character: Character;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private charactersService: CharactersService
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe(
       (params: Params) => {
-        this.name = params['name'];
+        this.character = this.charactersService.getCharacter(params['id']);
+        if (this.character === undefined) {
+          this.router.navigateByUrl('/404', { skipLocationChange: true });
+        }
       }
     );
   }
