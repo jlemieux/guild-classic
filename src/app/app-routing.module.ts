@@ -9,8 +9,7 @@ import { CharacterComponent } from './character/character.component';
 import { GuildComponent } from './guild/guild.component';
 import { AuthComponent } from './auth/auth.component';
 import { AuthGuard } from './auth/auth.guard';
-import { GuildsResolverService } from './shared/services/guilds-resolver.service';
-import { GuildGuard } from './guild/guild.guard';
+import { GuildsResolverService } from './guilds/guilds-resolver.service';
 
 
 const routes: Routes = [

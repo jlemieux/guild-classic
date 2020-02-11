@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Guild } from 'src/app/shared/models/guild.model';
-import { GuildsService } from 'src/app/shared/services/guilds.service';
+import { Guild } from 'src/app/guild/guild.model';
+import { GuildsService } from 'src/app/guilds/guilds.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
@@ -18,7 +18,6 @@ export class GuildCreateComponent implements OnInit {
   success: string = null;
 
   constructor(
-    private router: Router,
     private guildsService: GuildsService
   ) { }
 
@@ -36,14 +35,9 @@ export class GuildCreateComponent implements OnInit {
     }
     const name = form.value.name;
 
-    //const guild = new Guild(name);
-    //this.guildsService.addGuild(guild);
-
     this.isLoading = true;
-    this.guildsService.storeGuild(name).subscribe(
-      guildStoredResp => {
-        const guild = new Guild(name, guildStoredResp.name);
-        this.guildsService.addGuild(guild);
+    this.guildsService.addGuild(name).subscribe(
+      addResp => {
         this.isLoading = false;
         this.success = "Guild created!";
         setTimeout(() => {

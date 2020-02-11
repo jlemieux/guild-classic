@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { GuildsService } from '../shared/services/guilds.service';
-import { Guild } from '../shared/models/guild.model';
+import { GuildsService } from './guilds.service';
+import { Guild } from '../guild/guild.model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 export class GuildsComponent implements OnInit, OnDestroy {
 
   guilds: Guild[];
-  sub: Subscription;
+  private sub: Subscription;
 
   constructor(
     private guildsService: GuildsService
@@ -26,6 +26,17 @@ export class GuildsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  onDeleteGuild(guild: Guild) {
+    this.guildsService.deleteGuild(guild.id).subscribe(
+      deleteResp => {
+        console.log("Guild deleted!");
+      },
+      errorMessage => {
+        console.log(errorMessage);
+      }
+    );
   }
 
 }

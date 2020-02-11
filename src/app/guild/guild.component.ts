@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Guild } from '../shared/models/guild.model';
-import { GuildsService } from '../shared/services/guilds.service';
+import { Guild } from './guild.model';
+import { GuildsService } from '../guilds/guilds.service';
 
 @Component({
   selector: 'app-guild',
@@ -21,7 +21,6 @@ export class GuildComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(
       (params: Params) => {
-        console.log()
         this.guild = this.guildsService.getGuild(params['id']);
         if (this.guild === undefined) {
           this.router.navigateByUrl('/404', { skipLocationChange: true });

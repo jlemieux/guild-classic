@@ -9,7 +9,8 @@
         <div class="card-body">
           <h5 class="card-title">{{ guild.name }}</h5>
           <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a [routerLink]="['/guild', guild.id]" class="btn btn-primary">Button</a>
+          <a [routerLink]="['/guild', guild.id]" class="btn btn-primary">Go</a>
+          <button class="btn btn-danger" type="button" (click)="onDeleteGuild(guild)">Delete</button>
         </div>
       </div>
       <!-- <div class="card">
