@@ -11,6 +11,7 @@ import { AuthComponent } from './auth/auth.component';
 import { AuthGuard } from './auth/auth.guard';
 import { GuildsResolverService } from './guilds/guilds-resolver.service';
 import { CharactersResolverService } from './characters/characters-resolver.service';
+import { GuildCreateComponent } from './guilds/guild-create/guild-create.component';
 
 
 const routes: Routes = [
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'character/:id', component: CharacterComponent, canActivate: [AuthGuard], resolve: [CharactersResolverService] },
   { path: 'guilds', component: GuildsComponent, canActivate: [AuthGuard], resolve: [GuildsResolverService] },
   { path: 'guild/:id', component: GuildComponent, canActivate: [AuthGuard], resolve: [GuildsResolverService] },
+  { path: 'guilds/create', component: GuildCreateComponent, canActivate: [AuthGuard], resolve: [CharactersResolverService] },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
   { path: 'auth', component: AuthComponent },
   { path: '404', component: ErrorPageComponent, data: {message: 'Page not found!'} },

@@ -29,7 +29,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
   }
 
   onDeleteCharacter(character: Character) {
-    this.charactersService.deleteCharacter(character.id).subscribe(
+    this.charactersService.deleteCharacter(character).subscribe(
       deleteResp => {
         console.log("Character deleted!");
       },

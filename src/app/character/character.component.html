@@ -1,7 +1,10 @@
-<div class="container-fluid">
+<div class="container">
   <div class="row">
     <div class="col-12">
-      {{ character.name }}
+      <h3>{{ character.name }}</h3>
+      <h3>{{ character.server }}</h3>
+      <h3>{{ character.gear }}</h3>
+      <button *ngIf="character.guildId !== undefined" class="btn btn-primary" [routerLink]="['/guild', character.guildId]">Go to Guild</button>
     </div>
   </div>
 </div>

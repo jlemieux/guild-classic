@@ -2,6 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CharactersService } from '../characters.service';
 import { NgForm } from '@angular/forms';
 
+
+export interface CharacterCreateFormInfo {
+  name: string;
+  server: string;
+  gear: string;
+}
+
 @Component({
   selector: 'app-character-create',
   templateUrl: './character-create.component.html',
@@ -29,10 +36,11 @@ export class CharacterCreateComponent implements OnInit {
     if (!form.valid) {
       return;
     }
-    const name = form.value.name;
+    
+    const charInfo: CharacterCreateFormInfo = {...form.value};
 
     this.isLoading = true;
-    this.charactersService.addCharacter(name).subscribe(
+    this.charactersService.addCharacter(charInfo).subscribe(
       addResp => {
         this.isLoading = false;
         this.success = "Character created!";

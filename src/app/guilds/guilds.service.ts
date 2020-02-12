@@ -3,6 +3,8 @@ import { Guild } from '../guild/guild.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, tap, catchError } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs';
+import { CharactersService } from '../characters/characters.service';
+import { Character } from '../character/character.model';
 
 
 @Injectable({
@@ -17,8 +19,10 @@ export class GuildsService {
   private deleteGuildUrl = 'https://guild-classic.firebaseio.com/guilds/';
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private charactersService: CharactersService
   ) { }
+
 
   getGuild(guildId: string) {
     return this.guilds.find(guild => guild.id === guildId);
@@ -36,7 +40,7 @@ export class GuildsService {
       map(fetchedGuilds => {
         const guilds: Guild[] = [];
         for (let id in fetchedGuilds) {
-          guilds.push(new Guild(fetchedGuilds[id].name, id));
+          guilds.push(new Guild(fetchedGuilds[id].name, id, fetchedGuilds[id].ownerId));
         }
         return guilds;
       }),
@@ -51,20 +55,23 @@ export class GuildsService {
     this.guildsChanged.next(this.getGuilds());
   }
 
-  addGuild(guildName: string) {
+  createGuild(guildName: string, guildOwnerId: string) {
     return this.http.post<{name: string}>(
       this.guildsUrl,
-      {name: guildName}
+      {name: guildName, owner: guildOwnerId}
     ).pipe(
       catchError(this.handleError),
       tap(addResp => {
-        const guild = new Guild(guildName, addResp.name);
-        this._addGuild(guild);
+        console.log("addResp in guild service create: " + addResp);
+        const guildId = addResp.name;
+        const guild = new Guild(guildName, guildId, guildOwnerId);
+        this.charactersService.assignGuild(guildOwnerId, guildId);
+        this._createGuild(guild);
       })
     );
   }
 
-  private _addGuild(guild: Guild) {
+  private _createGuild(guild: Guild) {
     this.guilds.push(guild);
     this.guildsChanged.next(this.getGuilds());
   }

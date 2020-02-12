@@ -1,9 +1,6 @@
-<div class="container-fluid">
+<div class="container">
   <div class="row">
-    <div class="col-3">
-      <app-guild-create></app-guild-create>
-    </div>
-    <div class="col-9">
+    <div class="col-12">
       <h2 *ngIf="guilds.length === 0">You have no guilds!</h2>
       <div class="card" *ngFor="let guild of guilds">
         <div class="card-body">
@@ -13,11 +10,12 @@
           <button class="btn btn-danger" type="button" (click)="onDeleteGuild(guild)">Delete</button>
         </div>
       </div>
-      <!-- <div class="card">
-        <div class="card-body">
-          <app-guild-create></app-guild-create>
-        </div>
-      </div> -->
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-12">
+      <button class="btn btn-success" type="button" routerLink="/guilds/create">Create Guild</button>
     </div>
   </div>
 </div>

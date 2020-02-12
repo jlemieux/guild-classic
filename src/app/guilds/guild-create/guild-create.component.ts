@@ -1,48 +1,61 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Guild } from 'src/app/guild/guild.model';
 import { GuildsService } from 'src/app/guilds/guilds.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { CharactersService } from 'src/app/characters/characters.service';
+import { Subscription } from 'rxjs';
+import { Character } from 'src/app/character/character.model';
 
 @Component({
   selector: 'app-guild-create',
   templateUrl: './guild-create.component.html',
   styleUrls: ['./guild-create.component.css']
 })
-export class GuildCreateComponent implements OnInit {
+export class GuildCreateComponent implements OnInit, OnDestroy {
 
 
   isLoading = false;
   error: string = null;
-  success: string = null;
+
+  characters: Character[] = [];
+  private charSub: Subscription;
 
   constructor(
-    private guildsService: GuildsService
+    private guildsService: GuildsService,
+    private charactersService: CharactersService,
+    private router: Router
   ) { }
 
   ngOnInit() {
+    this.characters = this.charactersService.getCharacters();
+    this.charSub = this.charactersService.charactersChanged.subscribe(characters => {
+      this.characters = characters;
+    });
+  }
+
+  ngOnDestroy() {
+    this.charSub.unsubscribe();
   }
 
 
   onSubmit(form: NgForm) {
     
     this.onHandleError(); // clear any errors on submit
-    this.onHandleSuccess();
   
     if (!form.valid) {
       return;
     }
-    const name = form.value.name;
+    const name: string = form.value.name;
+    const ownerId: string = form.value.owner;
 
     this.isLoading = true;
-    this.guildsService.addGuild(name).subscribe(
+    this.guildsService.createGuild(name, ownerId).subscribe(
       addResp => {
+        console.log("addResp in create comp: " + addResp);
         this.isLoading = false;
-        this.success = "Guild created!";
-        setTimeout(() => {
-          this.onHandleSuccess();
-        }, 2000);
+        this.router.navigate(['/guilds']);
       },
       errorMessage => {
         this.isLoading = false;
@@ -52,12 +65,12 @@ export class GuildCreateComponent implements OnInit {
     form.reset();
   }
 
-  onHandleError() {
-    this.error = null;
+  hasGuildlessCharacter() {
+    return this.characters.some(character => character.guildId === undefined);
   }
 
-  onHandleSuccess() {
-    this.success = null;
+  onHandleError() {
+    this.error = null;
   }
 
 }

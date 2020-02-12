@@ -1,8 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, tap, map } from 'rxjs/operators';
+import { catchError, tap, map, mergeMap } from 'rxjs/operators';
 import { Character } from '../character/character.model';
 import { Subject, throwError } from 'rxjs';
+import { CharacterCreateFormInfo } from './character-create/character-create.component';
+import { GuildsService } from '../guilds/guilds.service';
+
+export interface CharacterResponse {
+  name: string;
+  server: string;
+  gear: string;
+  guildId?: string;
+  raidId?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +22,41 @@ export class CharactersService {
   private characters: Character[] = [];
 
   private charactersUrl = 'https://guild-classic.firebaseio.com/characters.json';
-  private deleteCharacterUrl = 'https://guild-classic.firebaseio.com/characters/';
+  private characterUrl = 'https://guild-classic.firebaseio.com/characters/';
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private guildsService: GuildsService
   ) {}
+
+  removeGuildFromCharacter(guild: Guild) {
+    return this.http.delete<null>(
+      `${this.deleteGuildUrl}${character.guildId}.json`
+    ).pipe(
+      catchError(this.handleError),
+      tap(deleteResp => {
+        this._deleteGuild(guildId);
+      })
+    );
+  }
+
+  assignGuild(characterId: string, guildId: string) {
+    this.http.patch<{guildId: string}>(
+      `${this.characterUrl}${characterId}.json`,
+      {guildId: guildId}
+    ).pipe(
+      catchError(this.handleError),
+      tap(addResp => {
+        console.log("addResp in character service: " + addResp);
+        this.setCharacters(this.characters.map(character => {
+          if (character.id === characterId) {
+            character.guildId = guildId;
+          }
+          return character;
+        }));
+      })
+    ).subscribe();
+  }
 
   getCharacter(charId: string) {
     return this.characters.find(character => character.id === charId);
@@ -27,15 +67,22 @@ export class CharactersService {
   }
 
   fetchCharacters() {
-    return this.http.get<{[id: string]: Character}>(
+    return this.http.get<{[id: string]: CharacterResponse}>(
       this.charactersUrl
     ).pipe(
       catchError(this.handleError),
       map(fetchedChars => {
         // can be null. dont use map. do for in loop.
         const characters: Character[] = [];
-        for (let id in fetchedChars) {
-          characters.push(new Character(fetchedChars[id].name, id));
+        for (let characterId in fetchedChars) {
+          characters.push(new Character(
+            fetchedChars[characterId].name,
+            fetchedChars[characterId].server,
+            fetchedChars[characterId].gear,
+            characterId,
+            fetchedChars[characterId].guildId,
+            fetchedChars[characterId].raidId
+          ));
         }
         return characters;
       }),
@@ -50,14 +97,20 @@ export class CharactersService {
     this.charactersChanged.next(this.getCharacters());
   }
 
-  addCharacter(charName: string) {
+  addCharacter(charInfo: CharacterCreateFormInfo) {
     return this.http.post<{name: string}>(
       this.charactersUrl,
-      {name: charName}
+      charInfo
     ).pipe(
       catchError(this.handleError),
       tap(addResp => {
-        const character = new Character(charName, addResp.name);
+        const characterId = addResp.name;
+        const character = new Character(
+          charInfo.name,
+          charInfo.server,
+          charInfo.gear,
+          characterId,
+        );
         this._addCharacter(character);
       })
     );
@@ -68,19 +121,18 @@ export class CharactersService {
     this.charactersChanged.next(this.getCharacters());
   }
 
-  deleteCharacter(charId: string) {
+  deleteCharacter(character: Character) {
     return this.http.delete<null>(
-      `${this.deleteCharacterUrl}${charId}.json`
+      `${this.characterUrl}${character.id}.json`
     ).pipe(
       catchError(this.handleError),
-      tap(deleteResp => {
-        this._deleteCharacter(charId);
-      })
+      mergeMap(deleteResp => this.guildsService.removeCharacterFromGuild(character)),
+      tap(deleteResp => this._deleteCharacter(character))
     );
   }
 
-  private _deleteCharacter(charId: string) {
-    this.characters = this.characters.filter(character => character.id !== charId);
+  private _deleteCharacter(victim: Character) {
+    this.characters = this.characters.filter(character => character.id !== victim.id);
     this.charactersChanged.next(this.getCharacters());
   }
 
