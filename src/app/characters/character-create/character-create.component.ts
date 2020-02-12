@@ -40,7 +40,7 @@ export class CharacterCreateComponent implements OnInit {
     const charInfo: CharacterCreateFormInfo = {...form.value};
 
     this.isLoading = true;
-    this.charactersService.addCharacter(charInfo).subscribe(
+    this.charactersService.createCharacter(charInfo).subscribe(
       addResp => {
         this.isLoading = false;
         this.success = "Character created!";

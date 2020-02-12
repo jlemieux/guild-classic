@@ -1,7 +1,9 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-12">
-      {{ guild.name }}
+      <ng-template *ngIf="!!guild">
+        {{ guild.name }}
+      </ng-template>
     </div>
   </div>
 </div>

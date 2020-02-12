@@ -28,5 +28,4 @@ export class CharacterComponent implements OnInit {
       }
     );
   }
-
 }

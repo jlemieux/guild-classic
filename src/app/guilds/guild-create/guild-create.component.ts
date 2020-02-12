@@ -8,6 +8,12 @@ import { CharactersService } from 'src/app/characters/characters.service';
 import { Subscription } from 'rxjs';
 import { Character } from 'src/app/character/character.model';
 
+
+export interface GuildCreateFormInfo {
+  name: string;
+  ownerId: string;
+}
+
 @Component({
   selector: 'app-guild-create',
   templateUrl: './guild-create.component.html',
@@ -47,11 +53,13 @@ export class GuildCreateComponent implements OnInit, OnDestroy {
     if (!form.valid) {
       return;
     }
-    const name: string = form.value.name;
-    const ownerId: string = form.value.owner;
+
+    const guildInfo: GuildCreateFormInfo = {...form.value};
+    //const name: string = form.value.name;
+    //const ownerId: string = form.value.owner;
 
     this.isLoading = true;
-    this.guildsService.createGuild(name, ownerId).subscribe(
+    this.guildsService.createGuild(guildInfo).subscribe(
       addResp => {
         console.log("addResp in create comp: " + addResp);
         this.isLoading = false;

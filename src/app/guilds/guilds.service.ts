@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Guild } from '../guild/guild.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, tap, catchError, mergeMap } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs';
 import { CharactersService } from '../characters/characters.service';
 import { Character } from '../character/character.model';
+import { GuildCreateFormInfo } from './guild-create/guild-create.component';
+
+
+export interface GuildResponse {
+  name: string;
+  ownerId: string;
+}
 
 
 @Injectable({
@@ -33,7 +40,7 @@ export class GuildsService {
   }
 
   fetchGuilds() {
-    return this.http.get<{[id: string]: Guild}>(
+    return this.http.get<{[id: string]: GuildResponse}>(
       this.guildsUrl
     ).pipe(
       catchError(this.handleError),
@@ -55,18 +62,17 @@ export class GuildsService {
     this.guildsChanged.next(this.getGuilds());
   }
 
-  createGuild(guildName: string, guildOwnerId: string) {
+  createGuild(guildInfo: GuildCreateFormInfo) {
     return this.http.post<{name: string}>(
       this.guildsUrl,
-      {name: guildName, owner: guildOwnerId}
+      guildInfo
     ).pipe(
       catchError(this.handleError),
-      tap(addResp => {
-        console.log("addResp in guild service create: " + addResp);
+      mergeMap(addResp => {
         const guildId = addResp.name;
-        const guild = new Guild(guildName, guildId, guildOwnerId);
-        this.charactersService.assignGuild(guildOwnerId, guildId);
+        const guild = new Guild(guildInfo.name, guildId, guildInfo.ownerId);
         this._createGuild(guild);
+        return this.charactersService.assignGuildToCharacter(guildInfo.ownerId, guildId);
       })
     );
   }
@@ -76,13 +82,16 @@ export class GuildsService {
     this.guildsChanged.next(this.getGuilds());
   }
 
-  deleteGuild(guildId: string) {
+  deleteGuild(guild: Guild) {
     return this.http.delete<null>(
-      `${this.deleteGuildUrl}${guildId}.json`
+      `${this.deleteGuildUrl}${guild.id}.json`
     ).pipe(
       catchError(this.handleError),
       tap(deleteResp => {
-        this._deleteGuild(guildId);
+        this._deleteGuild(guild.id);
+      }),
+      mergeMap(deleteResp => {
+        return this.charactersService.removeGuildFromMembers(guild);
       })
     );
   }

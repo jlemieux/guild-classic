@@ -4,7 +4,7 @@
       <h2 *ngIf="guilds.length === 0">You have no guilds!</h2>
       <div class="card" *ngFor="let guild of guilds">
         <div class="card-body">
-          <h5 class="card-title">{{ guild.name }}</h5>
+          <h5 class="card-title">{{ guild.name }} ({{ getOwner(guild).name }})</h5>
           <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
           <a [routerLink]="['/guild', guild.id]" class="btn btn-primary">Go</a>
           <button class="btn btn-danger" type="button" (click)="onDeleteGuild(guild)">Delete</button>
