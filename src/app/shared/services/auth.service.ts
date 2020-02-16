@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, throwError } from 'rxjs';
+import { BehaviorSubject, throwError, Observable, ReplaySubject } from 'rxjs';
 import { Router } from '@angular/router';
-import { catchError, tap } from 'rxjs/operators';
-import { User } from './user.model';
+import { catchError, tap, distinctUntilChanged } from 'rxjs/operators';
+import { User } from '../models/user.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ApiService } from './api.service';
+import { JwtService } from './jwt.service';
 
 
 export interface AuthResponseData {
@@ -21,11 +23,70 @@ export interface AuthResponseData {
 })
 export class AuthService {
 
+  private currentUserSubject = new BehaviorSubject<User>({} as User);
+  currentUser$: Observable<User> = this.currentUserSubject.pipe(distinctUntilChanged());
+
+  private isAuthenticatedSubject = new ReplaySubject<boolean>(1);
+  isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.pipe(distinctUntilChanged());
+
+  constructor(
+    private apiService: ApiService,
+    private jwtService: JwtService
+  ) { }
+
+  populate() {
+    if (this.jwtService.getToken()) {
+      this.apiService.get('/user').subscribe(
+        data => this.setAuth(data.user),
+        err => this.purgeAuth()
+      );
+    }
+    else {
+      this.purgeAuth();
+    }
+  }
+
+  setAuth(user: User) {
+    this.jwtService.saveToken(user.token);
+    this.currentUserSubject.next(user);
+    this.isAuthenticatedSubject.next(true);
+  }
+
+  purgeAuth() {
+    this.jwtService.destroyToken();
+    this.currentUserSubject.next({} as User);
+    this.isAuthenticatedSubject.next(false);
+  }
+
+  attemptAuth(type: string, credentials: Object): Observable<User> {
+    const path = (type === 'login') ? '/login' : '';
+    return this.apiService.post(
+      '/users' + path,
+      {
+        user: credentials
+      }
+    ).pipe(
+      tap(data => this.setAuth(data.user))
+    );
+  }
+
+  // update(user: User): Observable<User> {
+  //   return this.apiService.put(
+  //     '/user',
+  //     {
+  //       user
+  //     }
+  //   )
+  // }
+
+
+  /*
   user = new BehaviorSubject<User>(null);
+  user2 = this.user
   private tokenExpireTimer: any;
-  private apiKey = 'AIzaSyDeBfxYAGcJu7z_i6B4zd_-LYk-IoOtTYU';
-  private apiSignupUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.apiKey}`;
-  private apiSigninUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.apiKey}`;
+  //private apiKey = 'AIzaSyDeBfxYAGcJu7z_i6B4zd_-LYk-IoOtTYU';
+  //private apiSignupUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.apiKey}`;
+  //private apiSigninUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.apiKey}`;
 
   constructor(
     private http: HttpClient,
@@ -132,4 +193,5 @@ export class AuthService {
     }
     return throwError(errorMessage);
   }
+  */
 }

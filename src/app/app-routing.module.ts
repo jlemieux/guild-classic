@@ -8,7 +8,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { CharacterComponent } from './character/character.component';
 import { GuildComponent } from './guild/guild.component';
 import { AuthComponent } from './auth/auth.component';
-import { AuthGuard } from './auth/auth.guard';
+import { AuthGuard } from './shared/services/auth.guard';
 import { GuildsResolverService } from './guilds/guilds-resolver.service';
 import { CharactersResolverService } from './characters/characters-resolver.service';
 import { GuildCreateComponent } from './guilds/guild-create/guild-create.component';

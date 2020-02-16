@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, ParamMap } from '@angular/router';
 import { Character } from './character.model';
 import { CharactersService } from '../characters/characters.service';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-character',
@@ -10,7 +12,8 @@ import { CharactersService } from '../characters/characters.service';
 })
 export class CharacterComponent implements OnInit {
 
-  character: Character;
+  //character: Character;
+  character$: Observable<Character>;
 
   constructor(
     private route: ActivatedRoute,
@@ -18,14 +21,26 @@ export class CharacterComponent implements OnInit {
     private charactersService: CharactersService
   ) { }
 
+  // ngOnInit() {
+  //   this.route.params.subscribe(
+  //     (params: Params) => {
+  //       this.character = this.charactersService.getCharacter(params['id']);
+  //       if (this.character === undefined) {
+  //         this.router.navigateByUrl('/404', { skipLocationChange: true });
+  //       }
+  //     }
+  //   );
+  // }
+
   ngOnInit() {
-    this.route.params.subscribe(
-      (params: Params) => {
-        this.character = this.charactersService.getCharacter(params['id']);
-        if (this.character === undefined) {
-          this.router.navigateByUrl('/404', { skipLocationChange: true });
-        }
-      }
+    this.character$ = this.route.paramMap.pipe(
+      switchMap((params: ParamMap) => {
+        return this.charactersService.getCharacter(params.get('id'));
+      })
     );
+  }
+
+  gotoCharacters() {
+    this.router.navigate(['/characters']);
   }
 }

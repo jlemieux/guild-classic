@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GuildsService } from './guilds.service';
+import { GuildsService } from '../shared/services/guilds.service';
+import { Guild } from '../guild/guild.model';
 
 describe('GuildsService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -10,3 +11,4 @@ describe('GuildsService', () => {
     expect(service).toBeTruthy();
   });
 });
+

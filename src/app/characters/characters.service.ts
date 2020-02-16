@@ -4,7 +4,7 @@ import { catchError, tap, map, mergeMap, filter } from 'rxjs/operators';
 import { Character } from '../character/character.model';
 import { Subject, throwError } from 'rxjs';
 import { CharacterCreateFormInfo } from './character-create/character-create.component';
-import { GuildsService } from '../guilds/guilds.service';
+import { GuildsService } from '../shared/services/guilds.service';
 import { Guild } from '../guild/guild.model';
 
 export interface CharacterResponse {

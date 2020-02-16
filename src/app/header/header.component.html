@@ -13,29 +13,34 @@
           [routerLinkActiveOptions]="{exact: true}">
         <a class="nav-link" routerLink="/">Home</a>
       </li>
-      <ng-container *ngIf="isAuthenticated">
-        <li class="nav-item"
-            routerLinkActive="active">
+      <ng-container *appShowAuthed="true">
+        <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/characters">My Characters</a>
         </li>
-        <li class="nav-item"
-            routerLinkActive="active">
+        <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/guilds">My Guilds</a>
         </li>
-        <li class="nav-item"
-            routerLinkActive="active">
+        <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/settings">Settings</a>
         </li>
-        <li class="nav-item"
-            routerLinkActive="active">
+        <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" style="cursor: pointer;" (click)="onLogout()">Logout</a>
         </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link"
+            [routerLink]="['/profile', currentUser.username]">
+            {{ currentUser.username }}
+          </a>
+        </li>
       </ng-container>
-      <li class="nav-item"
-          routerLinkActive="active"
-          *ngIf="!isAuthenticated">
-        <a class="nav-link" routerLink="/auth">Login</a>
-      </li>
+      <ng-container *appShowAuthed="false">
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/login">Sign in</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/register">Sign up</a>
+        </li>
+      </ng-container>
     </ul>
   </div>
 </nav>

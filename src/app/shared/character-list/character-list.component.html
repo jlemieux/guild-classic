@@ -1,0 +1,10 @@
+<app-character-preview
+  *ngFor="let character of characters"
+  [character]="character">
+</app-character-preview>
+
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<div *ngIf="!isLoading && characters.length === 0">
+  You are not in any characters!
+</div>

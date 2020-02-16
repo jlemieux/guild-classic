@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Guild } from 'src/app/guild/guild.model';
-import { GuildsService } from 'src/app/guilds/guilds.service';
-import { AuthService } from 'src/app/auth/auth.service';
+import { GuildsService } from 'src/app/shared/services/guilds.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { CharactersService } from 'src/app/characters/characters.service';

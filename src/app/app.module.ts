@@ -14,11 +14,17 @@ import { CharacterComponent } from './character/character.component';
 import { GuildComponent } from './guild/guild.component';
 import { AuthComponent } from './auth/auth.component';
 import { HeaderComponent } from './header/header.component';
-import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import { AuthInterceptorService } from './shared/services/auth-interceptor.service';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { KebabCasePipe } from './shared/pipes/kebab-case.pipe';
 import { GuildCreateComponent } from './guilds/guild-create/guild-create.component';
 import { CharacterCreateComponent } from './characters/character-create/character-create.component';
+import { ListErrorsComponent } from './shared/list-errors/list-errors.component';
+import { GuildListComponent } from './shared/guild-list/guild-list.component';
+import { GuildPreviewComponent } from './shared/guild-preview/guild-preview.component';
+import { CharacterPreviewComponent } from './shared/character-preview/character-preview.component';
+import { CharacterListComponent } from './shared/character-list/character-list.component';
+import { ShowAuthedDirective } from './shared/show-authed.directive';
 
 @NgModule({
   declarations: [
@@ -35,7 +41,13 @@ import { CharacterCreateComponent } from './characters/character-create/characte
     LoadingSpinnerComponent,
     KebabCasePipe,
     GuildCreateComponent,
-    CharacterCreateComponent
+    CharacterCreateComponent,
+    ListErrorsComponent,
+    GuildListComponent,
+    GuildPreviewComponent,
+    CharacterPreviewComponent,
+    CharacterListComponent,
+    ShowAuthedDirective
   ],
   imports: [
     BrowserModule,

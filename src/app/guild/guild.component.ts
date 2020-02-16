@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Guild } from './guild.model';
-import { GuildsService } from '../guilds/guilds.service';
+import { GuildsService } from '../shared/services/guilds.service';
 import { CharactersService } from '../characters/characters.service';
 
 @Component({

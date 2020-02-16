@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { GuildsService } from './guilds.service';
+import { GuildsService } from '../shared/services/guilds.service';
 import { Guild } from '../guild/guild.model';
 
 @Injectable({

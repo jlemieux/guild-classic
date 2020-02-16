@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { GuildsService } from './guilds.service';
+import { GuildsService } from '../shared/services/guilds.service';
 import { Guild } from '../guild/guild.model';
 import { Subscription } from 'rxjs';
 import { CharactersService } from '../characters/characters.service';

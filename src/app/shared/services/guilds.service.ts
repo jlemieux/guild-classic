@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Guild } from '../guild/guild.model';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Guild } from '../../guild/guild.model';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { map, tap, catchError, mergeMap } from 'rxjs/operators';
-import { Subject, throwError } from 'rxjs';
-import { CharactersService } from '../characters/characters.service';
-import { Character } from '../character/character.model';
-import { GuildCreateFormInfo } from './guild-create/guild-create.component';
+import { Subject, throwError, Observable } from 'rxjs';
+import { CharactersService } from '../../characters/characters.service';
+import { Character } from '../../character/character.model';
+import { GuildCreateFormInfo } from '../../guilds/guild-create/guild-create.component';
+import { ApiService } from './api.service';
+import { GuildListParams } from '../models/guild-list-params.model';
 
 
-export interface GuildResponse {
-  name: string;
-  ownerId: string;
-}
+// export interface GuildResponse {
+//   name: string;
+//   ownerId: string;
+// }
 
 
 @Injectable({
@@ -19,6 +21,38 @@ export interface GuildResponse {
 })
 export class GuildsService {
 
+  constructor(
+    private apiService: ApiService
+  ) { }
+
+  getGuilds(params: GuildListParams): Observable<{guilds: Guild[]}> {
+    return this.apiService.get(
+      '/guilds',
+      new HttpParams({ fromObject: params as {} })
+    );
+  }
+
+  getGuild(slug: string): Observable<Guild> {
+    return this.apiService.get(`/guilds/${slug}`);
+  }
+
+  //TODO: unknown delete return type yet
+  destroy(slug: string): Observable<Object> {
+    return this.apiService.delete(`/guilds/${slug}`);
+  }
+
+  save(guild: Guild): Observable<Guild> {
+    if (guild.slug) {  // edit existing guild
+      return this.apiService.put(`/guilds/${guild.slug}`, { guild });
+    }
+    else {  // new guild
+      return this.apiService.post('/guilds', { guild });
+    }
+  }
+
+  
+
+  /*
   guildsChanged = new Subject<Guild[]>();
   private guilds: Guild[] = [];
 
@@ -129,4 +163,5 @@ export class GuildsService {
     }
     return throwError(errorMessage);
   }
+  */
 }

@@ -1,7 +1,36 @@
-<div class="container">
+<div class="container-fluid">
   <div class="row">
     <div class="col-12">
-      <h2>Home Works!</h2>
+      <div class="feed-toggle">
+        <ul class="nav nav-pills outline-active">
+          <li class="nav-item">
+            <a class="nav-link"
+               [ngClass]="{'active': listConfig.type === 'feed'}"
+               (click)="setListTo('feed')">
+               Your Feed
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link"
+               [ngClass]="{'active': listConfig.type === 'all' && !listConfig.filters.tag}"
+               (click)="setListTo('all')">
+               Global Feed
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      
+    </div>
+    <div class="col-6">
+      
+    </div>
+  </div>
+    
+      
     </div>
   </div>
 </div>
