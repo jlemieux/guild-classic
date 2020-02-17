@@ -3,7 +3,7 @@ import { Guild } from '../../guild/guild.model';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { map, tap, catchError, mergeMap } from 'rxjs/operators';
 import { Subject, throwError, Observable } from 'rxjs';
-import { CharactersService } from '../../characters/characters.service';
+import { CharactersService } from './characters.service';
 import { Character } from '../../character/character.model';
 import { GuildCreateFormInfo } from '../../guilds/guild-create/guild-create.component';
 import { ApiService } from './api.service';
@@ -25,7 +25,7 @@ export class GuildsService {
     private apiService: ApiService
   ) { }
 
-  getGuilds(params: GuildListParams): Observable<{guilds: Guild[]}> {
+  getGuilds(params: GuildListParams): Observable<Guild[]> {
     return this.apiService.get(
       '/guilds',
       new HttpParams({ fromObject: params as {} })
@@ -43,10 +43,10 @@ export class GuildsService {
 
   save(guild: Guild): Observable<Guild> {
     if (guild.slug) {  // edit existing guild
-      return this.apiService.put(`/guilds/${guild.slug}`, { guild });
+      return this.apiService.put(`/guilds/${guild.slug}`, guild);
     }
     else {  // new guild
-      return this.apiService.post('/guilds', { guild });
+      return this.apiService.post('/guilds', guild);
     }
   }
 

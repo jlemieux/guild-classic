@@ -4,7 +4,7 @@ import { GuildsService } from 'src/app/shared/services/guilds.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { CharactersService } from 'src/app/characters/characters.service';
+import { CharactersService } from 'src/app/shared/services/characters.service';
 import { Subscription } from 'rxjs';
 import { Character } from 'src/app/character/character.model';
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Character } from 'src/app/character/character.model';
-import { CharactersService } from './characters.service';
+import { CharactersService } from '../shared/services/characters.service';
 import { Subscription } from 'rxjs';
 
 @Component({

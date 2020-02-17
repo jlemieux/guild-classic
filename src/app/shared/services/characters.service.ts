@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { catchError, tap, map, mergeMap, filter } from 'rxjs/operators';
-import { Character } from '../character/character.model';
-import { Subject, throwError } from 'rxjs';
-import { CharacterCreateFormInfo } from './character-create/character-create.component';
-import { GuildsService } from '../shared/services/guilds.service';
-import { Guild } from '../guild/guild.model';
+import { Character } from '../../character/character.model';
+import { Subject, throwError, Observable } from 'rxjs';
+import { CharacterCreateFormInfo } from '../../characters/character-create/character-create.component';
+import { GuildsService } from './guilds.service';
+import { Guild } from '../../guild/guild.model';
+import { ApiService } from './api.service';
+import { CharacterListParams } from '../models/character-list-params.model';
 
 export interface CharacterResponse {
   name: string;
@@ -19,6 +21,35 @@ export interface CharacterResponse {
   providedIn: 'root'
 })
 export class CharactersService {
+
+  constructor(
+    private apiService: ApiService
+  ) { }
+
+  getCharacters(params: CharacterListParams): Observable<Character[]> {
+    return this.apiService.get(
+      '/characters',
+      new HttpParams({ fromObject: params as {} })
+    );
+  }
+
+  getCharacter(slug: string): Observable<Character> {
+    return this.apiService.get(`/characters/${slug}`);
+  }
+
+  destroy(slug: string): Observable<Object> {
+    return this.apiService.delete(`/characters/${slug}`);
+  }
+
+  save(character: Character): Observable<Character> {
+    if (character.slug) {
+      return this.apiService.put(`/characters/${character.slug}`, character);
+    }
+    else {
+      return this.apiService.post('/characters', character);
+    }
+  }
+  /*
   charactersChanged = new Subject<Character[]>();
   private characters: Character[] = [];
 
@@ -181,4 +212,5 @@ export class CharactersService {
     }
     return throwError(errorMessage);
   }
+  */
 }

@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Guild } from './guild.model';
 import { GuildsService } from '../shared/services/guilds.service';
-import { CharactersService } from '../characters/characters.service';
+import { CharactersService } from '../shared/services/characters.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-guild',
@@ -11,23 +13,14 @@ import { CharactersService } from '../characters/characters.service';
 })
 export class GuildComponent implements OnInit {
 
-  guild: Guild;
+  guild$: Observable<Guild>;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private guildsService: GuildsService
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.route.params.subscribe(
-      (params: Params) => {
-        this.guild = this.guildsService.getGuild(params['id']);
-        if (this.guild === undefined) {
-          this.router.navigateByUrl('/404', { skipLocationChange: true });
-        }
-      }
-    );
+    this.guild$ = this.route.data.pipe(map(data => data.guild));
   }
 
 }

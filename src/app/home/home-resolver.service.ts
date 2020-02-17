@@ -3,11 +3,12 @@ import { AuthService } from '../shared/services/auth.service';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { User } from '../shared/models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class HomeResolverService implements Resolve<boolean> {
+export class HomeResolverService implements Resolve<User> {
 
   constructor(
     private authService: AuthService
@@ -16,9 +17,9 @@ export class HomeResolverService implements Resolve<boolean> {
   resolve(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean> {
+  ): Observable<User> {
 
-    return this.authService.isAuthenticated$.pipe(take(1));
+    return this.authService.currentUser$.pipe(take(1));
 
   }
 }

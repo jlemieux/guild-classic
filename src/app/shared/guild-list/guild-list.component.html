@@ -1,3 +1,19 @@
+<ng-container *ngIf="guilds$ | async as guilds; else loading">
+  <app-guild-preview
+    *ngFor="let guild of guilds"
+    [guild]="guild">
+  </app-guild-preview>
+  <div *ngIf="guilds.length === 0">
+    You are not in any guilds!
+  </div>
+</ng-container>
+<ng-template #loading>
+  <app-loading-spinner></app-loading-spinner>
+</ng-template>
+
+
+<!--
+  trying out async pipe. can swap back
 <app-guild-preview
   *ngFor="let guild of guilds"
   [guild]="guild">
@@ -8,3 +24,4 @@
 <div *ngIf="!isLoading && guilds.length === 0">
   You are not in any guilds!
 </div>
+-->

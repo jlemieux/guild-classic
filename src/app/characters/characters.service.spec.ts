@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CharactersService } from './characters.service';
+import { CharactersService } from '../shared/services/characters.service';
 
 describe('CharactersService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

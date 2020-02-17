@@ -23,11 +23,11 @@ export interface AuthResponseData {
 })
 export class AuthService {
 
-  private currentUserSubject = new BehaviorSubject<User>({} as User);
-  currentUser$: Observable<User> = this.currentUserSubject.pipe(distinctUntilChanged());
+  private currentUserSubject = new ReplaySubject<User>(1);
+  currentUser$: Observable<User> = this.currentUserSubject;
 
-  private isAuthenticatedSubject = new ReplaySubject<boolean>(1);
-  isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.pipe(distinctUntilChanged());
+  //private isAuthenticatedSubject = new ReplaySubject<boolean>(1);
+  //isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject;
 
   constructor(
     private apiService: ApiService,
@@ -49,13 +49,13 @@ export class AuthService {
   setAuth(user: User) {
     this.jwtService.saveToken(user.token);
     this.currentUserSubject.next(user);
-    this.isAuthenticatedSubject.next(true);
+    //this.isAuthenticatedSubject.next(true);
   }
 
   purgeAuth() {
     this.jwtService.destroyToken();
-    this.currentUserSubject.next({} as User);
-    this.isAuthenticatedSubject.next(false);
+    this.currentUserSubject.next(null);
+    //this.isAuthenticatedSubject.next(false);
   }
 
   attemptAuth(type: string, credentials: Object): Observable<User> {
@@ -66,7 +66,7 @@ export class AuthService {
         user: credentials
       }
     ).pipe(
-      tap(data => this.setAuth(data.user))
+      tap(user => this.setAuth(user))
     );
   }
 

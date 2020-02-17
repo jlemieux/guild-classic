@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, ParamMap } from '@angular/router';
 import { Character } from './character.model';
-import { CharactersService } from '../characters/characters.service';
+import { CharactersService } from '../shared/services/characters.service';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-character',
@@ -12,6 +12,17 @@ import { switchMap } from 'rxjs/operators';
 })
 export class CharacterComponent implements OnInit {
 
+  character$: Observable<Character>;
+
+  constructor(
+    private route: ActivatedRoute
+  ) { }
+
+  ngOnInit() {
+    this.character$ = this.route.data.pipe(map(data => data.character));
+  }
+
+  /*
   //character: Character;
   character$: Observable<Character>;
 
@@ -43,4 +54,5 @@ export class CharacterComponent implements OnInit {
   gotoCharacters() {
     this.router.navigate(['/characters']);
   }
+  */
 }

@@ -1,9 +1,9 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-12">
-      <ng-template *ngIf="!!guild">
+<ng-container *ngIf="guild$ | async as guild">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
         {{ guild.name }}
-      </ng-template>
+      </div>
     </div>
   </div>
-</div>
+</ng-container>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CharactersService } from '../characters.service';
+import { CharactersService } from '../../shared/services/characters.service';
 import { NgForm } from '@angular/forms';
 
 

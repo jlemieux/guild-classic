@@ -18,9 +18,9 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> {
-    return this.authService.isAuthenticated$.pipe(
+    return this.authService.currentUser$.pipe(
       take(1),
-      map(isAuth => isAuth ? true : this.router.createUrlTree(['/auth']))
+      map(user => !!user ? true : this.router.createUrlTree(['/auth']))
     );
   }
   

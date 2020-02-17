@@ -1,12 +1,17 @@
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <ng-container *ngIf="character$ | async as character">
-        <h3>{{ character.name }}</h3>
-        <h3>{{ character.server }}</h3>
-        <h3>{{ character.gear }}</h3>
-        <button *ngIf="character.guildId" class="btn btn-primary" [routerLink]="['/guild', character.guildId]">Go to Guild ({{ character.guildId }})</button>
-      </ng-container>
+<ng-container *ngIf="character$ | async as character">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+          <h3>{{ character.name }}</h3>
+          <h3>{{ character.server }}</h3>
+          <h3>{{ character.gear }}</h3>
+          <button
+            *ngIf="character.guildId"
+            class="btn btn-primary"
+            [routerLink]="['/guilds', character.guildId]">
+            Go to Guild
+          </button>
+      </div>
     </div>
   </div>
-</div>
+</ng-container>
