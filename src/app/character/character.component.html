@@ -2,9 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-          <h3>{{ character.name }}</h3>
-          <h3>{{ character.server }}</h3>
-          <h3>{{ character.gear }}</h3>
+          <h4>{{ character | json }}</h4>
           <button
             *ngIf="character.guildId"
             class="btn btn-primary"

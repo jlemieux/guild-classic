@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { catchError, tap, map, mergeMap, filter } from 'rxjs/operators';
 import { Character } from '../../character/character.model';
 import { Subject, throwError, Observable } from 'rxjs';
-import { CharacterCreateFormInfo } from '../../characters/character-create/character-create.component';
+//import { CharacterCreateFormInfo } from '../../characters/character-create/character-create.component';
 import { GuildsService } from './guilds.service';
 import { Guild } from '../../guild/guild.model';
 import { ApiService } from './api.service';

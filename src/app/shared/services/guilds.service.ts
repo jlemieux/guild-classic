@@ -5,7 +5,7 @@ import { map, tap, catchError, mergeMap } from 'rxjs/operators';
 import { Subject, throwError, Observable } from 'rxjs';
 import { CharactersService } from './characters.service';
 import { Character } from '../../character/character.model';
-import { GuildCreateFormInfo } from '../../guilds/guild-create/guild-create.component';
+//import { GuildCreateFormInfo } from '../../guilds/guild-create/guild-create.component';
 import { ApiService } from './api.service';
 import { GuildListParams } from '../models/guild-list-params.model';
 

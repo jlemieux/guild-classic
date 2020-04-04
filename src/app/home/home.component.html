@@ -3,7 +3,7 @@
     <div class="col-12">
       <div class="feed-toggle">
         <ul class="nav nav-pills outline-active">
-          <li class="nav-item">
+          <li class="nav-item" *appShowAuthed="true">
             <a class="nav-link"
               [ngClass]="{'active': isPersonal}"
               (click)="personal()">
@@ -23,7 +23,7 @@
   </div>
   <div class="row">
     <div class="col-6">
-      <app-charater-list [params]="characterListParams"></app-charater-list>
+      <app-character-list [params]="characterListParams"></app-character-list>
     </div>
     <div class="col-6">
       <app-guild-list [params]="guildListParams"></app-guild-list>

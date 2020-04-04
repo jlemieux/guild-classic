@@ -1,3 +1,3 @@
 export interface GuildListParams {
-  hasUser?: string;
+  hasUser: string;
 }

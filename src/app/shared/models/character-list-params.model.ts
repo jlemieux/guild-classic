@@ -1,4 +1,4 @@
 export interface CharacterListParams {
-  owner?: string;
-  guild?: string;
+  owner: string;
+  guild: string;
 }

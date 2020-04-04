@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class GuildListComponent implements OnInit {
 
-  @Input() params: GuildListParams = {};
+  @Input() params: GuildListParams = {} as GuildListParams;
   guilds$: Observable<Guild[]>;
 
   constructor(

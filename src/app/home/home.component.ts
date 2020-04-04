@@ -15,8 +15,8 @@ import { of, EMPTY, Observable } from 'rxjs';
 export class HomeComponent implements OnInit {
 
   currentUser: User;
-  guildListParams: GuildListParams = {};
-  characterListParams: CharacterListParams = {};
+  guildListParams: GuildListParams = {} as GuildListParams;
+  characterListParams: CharacterListParams = {} as CharacterListParams;
   isPersonal: boolean;
 
   constructor(
@@ -26,9 +26,9 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.route.data.pipe(
       map(data => data.user)
-    ).subscribe(user => {
+    ).subscribe((user: User) => {
       this.currentUser = user;
-      this.isPersonal = user.username;
+      this.isPersonal = !!user.token;
     });
   }
 
@@ -40,8 +40,8 @@ export class HomeComponent implements OnInit {
 
   all() {
     this.isPersonal = false;
-    this.guildListParams = {};
-    this.characterListParams = {};
+    this.guildListParams = {} as GuildListParams;
+    this.characterListParams = {} as CharacterListParams;
   }
 
 }

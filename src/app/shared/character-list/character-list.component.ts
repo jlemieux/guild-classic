@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class CharacterListComponent implements OnInit {
 
-  @Input() params: CharacterListParams = {};
+  @Input() params: CharacterListParams = {} as CharacterListParams;
   characters$: Observable<Character[]>;
 
   constructor(

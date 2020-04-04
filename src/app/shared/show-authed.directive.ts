@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 export class ShowAuthedDirective implements OnInit, OnDestroy {
 
   @Input() appShowAuthed: boolean;
-  private authSub: Subscription;
+  private userSub: Subscription;
 
   constructor(
     private templateRef: TemplateRef<any>,
@@ -17,7 +17,8 @@ export class ShowAuthedDirective implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.authSub = this.authService.isAuthenticated$.subscribe(isAuth => {
+    this.userSub = this.authService.currentUser$.subscribe(user => {
+      const isAuth: boolean = !!user.token;
       if (isAuth && this.appShowAuthed || !isAuth && !this.appShowAuthed) {
         this.viewContainer.createEmbeddedView(this.templateRef);
       }
@@ -28,7 +29,7 @@ export class ShowAuthedDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.userSub.unsubscribe();
   }
 
 }

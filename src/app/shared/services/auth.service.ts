@@ -54,7 +54,7 @@ export class AuthService {
 
   purgeAuth() {
     this.jwtService.destroyToken();
-    this.currentUserSubject.next(null);
+    this.currentUserSubject.next({} as User);
     //this.isAuthenticatedSubject.next(false);
   }
 
