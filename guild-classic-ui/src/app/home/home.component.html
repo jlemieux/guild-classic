@@ -1,0 +1,61 @@
+<!-- <div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="feed-toggle">
+        <ul class="nav nav-pills outline-active">
+          <li class="nav-item" *appShowAuthed="true">
+            <a class="nav-link"
+              [ngClass]="{'active': isPersonal}"
+              (click)="personal()">
+              Personal
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link"
+              [ngClass]="{'active': !isPersonal}"
+              (click)="all()">
+              All
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <app-character-list [params]="characterListParams"></app-character-list>
+    </div>
+    <div class="col-6">
+      <app-guild-list [params]="guildListParams"></app-guild-list>
+    </div>
+  </div>
+</div> -->
+<div class="container-fluid">
+  <div class="row" *ngIf="user === undefined">
+    <div class="col-6">
+      <button class="btn-primary btn" (click)="testCreateUser()">Create User</button>
+    </div>
+    <div class="col-6">
+      <button class="btn-primary btn" (click)="testLogIn()">Log In</button>
+    </div>
+  </div>
+  <div class="row" *ngIf="user !== undefined">
+    <div class="col-3">
+      <button class="btn-success btn" (click)="testGetUser()">Get User</button>
+    </div>
+    <div class="col-3">
+      <button class="btn-success btn" (click)="testLogout()">Log Out</button>
+    </div>
+    <div class="col-3">
+      <button class="btn-success btn" (click)="testLogoutAll()">Log Out All</button>
+    </div>
+    <div class="col-3">
+      Active devices: {{ user.devices }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <button class="btn-warning btn" (click)="testRefresh()">Refresh</button>
+    </div>
+  </div>
+</div>

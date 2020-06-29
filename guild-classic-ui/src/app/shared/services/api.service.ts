@@ -25,7 +25,16 @@ export class ApiService {
   put(path: string, body: Object = {}): Observable<any> {
     return this.http.put<Response>(
       `${environment.api_url}${path}`,
-      JSON.stringify(body)
+      body
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  patch(path: string, body: Object = {}): Observable<any> {
+    return this.http.patch<Response>(
+      `${environment.api_url}${path}`,
+      body
     ).pipe(
       catchError(this.handleError)
     );
@@ -34,7 +43,7 @@ export class ApiService {
   post(path: string,  body: Object = {}): Observable<any> {
     return this.http.post<Response>(
       `${environment.api_url}${path}`,
-      JSON.stringify(body)
+      body
     ).pipe(
       catchError(this.handleError)
     );
@@ -49,6 +58,7 @@ export class ApiService {
   }
 
   private handleError(error: any) {
+    console.log(error);
     return throwError(error.error);
   }
 }

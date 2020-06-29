@@ -9,10 +9,10 @@ import { AuthService } from './shared/services/auth.service';
 export class AppComponent implements OnInit {
 
   constructor(
-    private authService: AuthService
+    //private authService: AuthService
   ) { }
 
   ngOnInit() {
-    this.authService.populate();
+    //this.authService.populate();
   }
 }

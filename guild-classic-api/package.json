@@ -1,0 +1,22 @@
+{
+  "name": "guild-classic-api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "express-jwt": "^5.3.3",
+    "helmet": "^3.23.3",
+    "mongoose": "^5.9.20",
+    "morgan": "~1.9.1",
+    "ms": "^2.1.2"
+  }
+}

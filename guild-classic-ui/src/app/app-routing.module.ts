@@ -21,9 +21,9 @@ const routes: Routes = [
   { 
     path: '',
     component: HomeComponent,
-    resolve: {
-      user: HomeResolverService
-    }
+    // resolve: {
+    //   user: HomeResolverService
+    // }
   },
   // { 
   //   path: 'characters',
