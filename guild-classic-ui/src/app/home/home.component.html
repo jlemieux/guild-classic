@@ -3,16 +3,16 @@
     <div class="col-12">
       <div class="feed-toggle">
         <ul class="nav nav-pills outline-active">
-          <li class="nav-item" *appShowAuthed="true">
+          <li class="nav-item" *appShowIfUserIs="true">
             <a class="nav-link"
-              [ngClass]="{'active': isPersonal}"
+              [ngClass]="{'active': currentUser}"
               (click)="personal()">
               Personal
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link"
-              [ngClass]="{'active': !isPersonal}"
+              [ngClass]="{'active': !currentUser}"
               (click)="all()">
               All
             </a>
@@ -30,8 +30,12 @@
     </div>
   </div>
 </div> -->
+
+
+
+
 <div class="container-fluid">
-  <div class="row" *ngIf="user === undefined">
+  <div class="row" *ngIf="!user">
     <div class="col-6">
       <button class="btn-primary btn" (click)="testCreateUser()">Create User</button>
     </div>
@@ -39,7 +43,7 @@
       <button class="btn-primary btn" (click)="testLogIn()">Log In</button>
     </div>
   </div>
-  <div class="row" *ngIf="user !== undefined">
+  <div class="row" *ngIf="user">
     <div class="col-3">
       <button class="btn-success btn" (click)="testGetUser()">Get User</button>
     </div>
@@ -51,11 +55,6 @@
     </div>
     <div class="col-3">
       Active devices: {{ user.devices }}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <button class="btn-warning btn" (click)="testRefresh()">Refresh</button>
     </div>
   </div>
 </div>

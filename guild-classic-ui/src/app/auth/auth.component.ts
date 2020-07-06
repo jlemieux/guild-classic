@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService, AuthResponseData } from '../shared/services/auth.service';
+import { AuthService } from '../shared/services/auth.service';
 import { Credentials } from '../shared/models/credentials.model';
 import { ErrorList } from '../shared/models/error-list.model';
 
@@ -49,14 +49,14 @@ export class AuthComponent implements OnInit {
     this.isSubmitting = true;
     this.errors = {};  // clear errors on submit
     const credentials: Credentials = this.authForm.value;
-    this.authService.attemptAuth(this.authType, credentials)
-      .subscribe(
-        data => this.router.navigateByUrl('/'),
-        err => {
-          this.errors = err;
-          this.isSubmitting = false;
-        }
-      )
+    // this.authService.attemptAuth(this.authType, credentials)
+    //   .subscribe(
+    //     data => this.router.navigateByUrl('/'),
+    //     err => {
+    //       this.errors = err;
+    //       this.isSubmitting = false;
+    //     }
+    //   );
   }
 
   /*

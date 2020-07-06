@@ -50,7 +50,7 @@ UserSchema.methods.addNewRefreshCookie = async function(res) {
       maxAge: ms(process.env.COOKIE_REFRESH_AGE),
       secure: false, // TODO: switch when I have cert
       signed: true,
-      sameSite: 'lax'
+      sameSite: 'strict'
     }
   );
 

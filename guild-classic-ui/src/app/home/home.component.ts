@@ -1,83 +1,70 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { GuildListParams } from '../shared/models/guild-list-params.model';
-import { CharacterListParams } from '../shared/models/character-list-params.model';
-import { exhaustMap, tap, map } from 'rxjs/operators';
 import { AuthService } from '../shared/services/auth.service';
-import { User } from '../shared/models/user.model';
-import { of, EMPTY, Observable } from 'rxjs';
-import { JwtService } from '../shared/services/jwt.service';
 import { ApiService } from '../shared/services/api.service';
+import { User } from '../shared/models/user.model';
+import { AbstractUserComponent } from '../shared/abstract-user/abstract-user.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent extends AbstractUserComponent {
 
-  user: {
-    email: string,
-    token: string,
-    devices: number
-  };
 
   constructor(
-    private apiService: ApiService,
-    private jwtService: JwtService
-  ) {}
+    authService: AuthService,
+    private apiService: ApiService
+  ) {
+    super(authService);
+  }
 
   ngOnInit() {
-
+    super.ngOnInit();
+    console.log("in child home component ngoninit");
+    //this.authService.currentUser$.subscribe((user: User) => this.user = user);
   }
 
   testCreateUser() {
-    this.apiService.post('/me', {email: 'client@email.com', password: 'mytestpass'}).subscribe(resp => {
-      console.log(resp);
-      this.user = resp;
-      this.jwtService.saveToken(resp.token);
-    });
+    this.authService.createUser('client@email.com', 'mytestpass').subscribe(
+      (user: User) => console.log("User created!"),
+      (err) => console.log("Could not create user...")
+    );
   }
 
   testLogIn() {
-    this.apiService.post('/me/login', {email: 'client@email.com', password: 'mytestpass'}).subscribe(resp => {
-      console.log(resp);
-      this.user = resp;
-      this.jwtService.saveToken(resp.token);
-    });
+    this.authService.logIn('client@email.com', 'mytestpass').subscribe(
+      (user: User) => console.log("Logged in!"),
+      (err) => console.log("Could not log in!")
+    );
   }
-
 
   testGetUser() {
-    this.apiService.get('/me').subscribe(resp => {
-      console.log(resp);
-      this.user = resp;
-      this.jwtService.saveToken(resp.token);
-    });
+    this.authService.getUser().subscribe(
+      (user: User) => console.log("Got the user!"),
+      (err) => console.log("Could not get the user!")
+    );
   }
 
-  testRefresh() {
-    this.apiService.post('/me/refresh').subscribe(resp => {
-      console.log(resp);
-      this.user = resp;
-      this.jwtService.saveToken(resp.token);
-    });
-  }
+  // testRefresh() {
+  //   this.apiService.post('/me/refresh').subscribe(resp => {
+  //     console.log(resp);
+  //     this.user = resp;
+  //   });
+  // }
 
   testLogout() {
-    this.apiService.patch('/me/logout').subscribe(resp => {
-      console.log(resp);
-      this.user = undefined;
-      this.jwtService.destroyToken();
-    });
+    this.authService.logout().subscribe(
+      (resp: {message: string}) => console.log(resp.message),
+      (err) => console.log(err)
+    );
   }
 
   testLogoutAll() {
-    this.apiService.delete('/me/logout').subscribe(resp => {
-      console.log(resp);
-      this.user = undefined;
-      this.jwtService.destroyToken();
-    });
+    this.authService.logoutAll().subscribe(
+      (resp: {message: string}) => console.log(resp.message),
+      (err) => console.log(err)
+    );
   }
 
   // currentUser: User;
@@ -85,27 +72,26 @@ export class HomeComponent implements OnInit {
   // characterListParams: CharacterListParams = {} as CharacterListParams;
   // isPersonal: boolean;
 
+  // currentUser: User;
+  // guildListParams: GuildListParams;
+  // characterListParams: CharacterListParams;
+
   // constructor(
   //   private route: ActivatedRoute
   // ) { }
 
   // ngOnInit() {
-  //   this.route.data.pipe(
-  //     map(data => data.user)
-  //   ).subscribe((user: User) => {
-  //     this.currentUser = user;
-  //     this.isPersonal = !!user.token;
+  //   this.route.data.subscribe((data: {user: User}) => {
+  //     this.currentUser = data.user;
   //   });
   // }
 
   // personal() {
-  //   this.isPersonal = true;
-  //   this.guildListParams.hasUser = this.currentUser.username;
-  //   this.characterListParams.owner = this.currentUser.username;
+  //   this.guildListParams.hasUser = this.currentUser.email;
+  //   this.characterListParams.owner = this.currentUser.email;
   // }
 
   // all() {
-  //   this.isPersonal = false;
   //   this.guildListParams = {} as GuildListParams;
   //   this.characterListParams = {} as CharacterListParams;
   // }

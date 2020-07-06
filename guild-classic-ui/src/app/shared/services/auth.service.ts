@@ -1,27 +1,41 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, throwError, Observable, ReplaySubject } from 'rxjs';
-import { Router } from '@angular/router';
-import { catchError, tap, distinctUntilChanged } from 'rxjs/operators';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { User } from '../models/user.model';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { finalize, tap, map } from 'rxjs/operators';
+import { HttpBackendClient } from './http-backend.client';
+import { environment } from 'src/environments/environment';
+import { HttpHeaders } from '@angular/common/http';
+import { RefreshService } from './refresh.service';
 import { ApiService } from './api.service';
-import { JwtService } from './jwt.service';
 
 
-export interface AuthResponseData {
-  idToken: string;
-  email: string;
-  refreshToken: string;
-  expiresIn: string;
-  localId: string;
-  registered?: boolean;
-}
+// export interface AuthResponseData {
+//   idToken: string;
+//   email: string;
+//   refreshToken: string;
+//   expiresIn: string;
+//   localId: string;
+//   registered?: boolean;
+// }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
+
+  /*
+  i want an observable. i want to sub to it.
+  
+  if there is a user with a token, i want to get it back instantly.
+
+  if there is not, want to wait and try and get one.
+    if I got one back, it would go the same as if i got one instantly.
+    if HttpError (no cookie or invalid cookie), treat as no user.
+
+  */
+
+  private sub = new Subscription();
 
   private currentUserSubject = new ReplaySubject<User>(1);
   currentUser$: Observable<User> = this.currentUserSubject;
@@ -31,44 +45,98 @@ export class AuthService {
 
   constructor(
     private apiService: ApiService,
-    private jwtService: JwtService
-  ) { }
-
-  populate() {
-    if (this.jwtService.getToken() !== null) {
-      this.apiService.get('/user').subscribe(
-        data => this.setAuth(data.user),
-        err => this.purgeAuth()
-      );
-    }
-    else {
-      this.purgeAuth();
-    }
+    private refreshService: RefreshService
+  ) {
+    this.sub.add(this.refreshService.refreshed$.subscribe(
+      (user: User) => this.currentUserSubject.next(user)
+    ));
   }
 
-  setAuth(user: User) {
-    this.jwtService.saveToken(user.token);
-    this.currentUserSubject.next(user);
-    //this.isAuthenticatedSubject.next(true);
-  }
 
-  purgeAuth() {
-    this.jwtService.destroyToken();
-    this.currentUserSubject.next({} as User);
-    //this.isAuthenticatedSubject.next(false);
-  }
-
-  attemptAuth(type: string, credentials: Object): Observable<User> {
-    const path = (type === 'login') ? '/login' : '';
-    return this.apiService.post(
-      '/users' + path,
-      {
-        user: credentials
-      }
-    ).pipe(
-      tap(user => this.setAuth(user))
+  createUser(email, password) {
+    return this.apiService.post('/me', {email, password}).pipe(
+      tap((user: User) => {
+        this.currentUserSubject.next(user);
+        this.refreshService.restartRefreshLoop();
+      })
     );
   }
+
+  logIn(email, password) {
+    return this.apiService.post('/me/login', {email, password}).pipe(
+      tap((user: User) => {
+        this.currentUserSubject.next(user);
+        this.refreshService.restartRefreshLoop();
+      })
+    );
+  }
+
+  getUser() {
+    return this.apiService.get('/me').pipe(
+      tap((user: User) => this.currentUserSubject.next(user))
+    );
+  }
+
+  logout() {
+    return this.apiService.patch('/me/logout').pipe(
+      tap((resp: {message: string}) => {
+        console.log("sending out null user subject");
+        this.currentUserSubject.next(null);
+        console.log("calling stopRefreshLoop()");
+        this.refreshService.stopRefreshLoop();
+      })
+    );
+  }
+
+  logoutAll() {
+    return this.apiService.delete('/me/logout').pipe(
+      tap((resp: {message: string}) => {
+        this.currentUserSubject.next(null);
+        this.refreshService.stopRefreshLoop();
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
+
+
+  // populate() {
+  //   if (this.jwtService.getToken() !== null) {
+  //     this.apiService.get('/user').subscribe(
+  //       data => this.setAuth(data.user),
+  //       err => this.purgeAuth()
+  //     );
+  //   }
+  //   else {
+  //     this.purgeAuth();
+  //   }
+  // }
+
+  // setAuth(user: User) {
+  //   this.jwtService.saveToken(user.token);
+  //   this.currentUserSubject.next(user);
+  //   //this.isAuthenticatedSubject.next(true);
+  // }
+
+  // purgeAuth() {
+  //   this.jwtService.destroyToken();
+  //   this.currentUserSubject.next({} as User);
+  //   //this.isAuthenticatedSubject.next(false);
+  // }
+
+  // attemptAuth(type: string, credentials: Object): Observable<User> {
+  //   const path = (type === 'login') ? '/login' : '';
+  //   return this.apiService.post(
+  //     '/users' + path,
+  //     {
+  //       user: credentials
+  //     }
+  //   ).pipe(
+  //     tap(user => this.setAuth(user))
+  //   );
+  // }
 
   // update(user: User): Observable<User> {
   //   return this.apiService.put(

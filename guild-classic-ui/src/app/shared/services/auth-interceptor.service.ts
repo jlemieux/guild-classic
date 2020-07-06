@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpHeaders } from '@angular/common/http';
-import { JwtService } from './jwt.service';
+import { HttpInterceptor, HttpRequest, HttpHandler } from '@angular/common/http';
+import { AuthService } from './auth.service';
+import { exhaustMap, take, switchMap, tap } from 'rxjs/operators';
+import { User } from '../models/user.model';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
@@ -9,19 +12,22 @@ import { JwtService } from './jwt.service';
 export class AuthInterceptorService implements HttpInterceptor {
 
   constructor(
-    private jwtService: JwtService
+    private authService: AuthService
   ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
-    const headersConfig = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    };
-    const token = this.jwtService.getToken();
-    if (token) {
-      headersConfig['Authorization'] = `Bearer ${token}`;
-    }
-    req = req.clone({ withCredentials: true, setHeaders: headersConfig });
-    return next.handle(req);
+    const headersConfig = environment.requestHeaders;
+    return this.authService.currentUser$.pipe(
+      take(1),
+      exhaustMap((user: User) => {
+        if (user !== null) {
+          headersConfig['Authorization'] = `Bearer ${user.token}`;
+        }
+        return next.handle(
+          req.clone({ withCredentials: true, setHeaders: headersConfig })
+        );
+      })
+    );
+    
   }
 }

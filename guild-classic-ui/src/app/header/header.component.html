@@ -13,7 +13,7 @@
           [routerLinkActiveOptions]="{exact: true}">
         <a class="nav-link" routerLink="/">Home</a>
       </li>
-      <ng-container *appShowAuthed="true">
+      <ng-container *ngIf="currentUser">
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/characters">My Characters</a>
         </li>
@@ -28,12 +28,12 @@
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link"
-            [routerLink]="['/profile', currentUser.username]">
-            {{ currentUser.username }}
+            [routerLink]="['/profile', currentUser.email]">
+            {{ currentUser.email }}
           </a>
         </li>
       </ng-container>
-      <ng-container *appShowAuthed="false">
+      <ng-container *ngIf="!currentUser">
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/login">Sign in</a>
         </li>

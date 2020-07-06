@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -24,7 +24,12 @@ import { GuildListComponent } from './shared/guild-list/guild-list.component';
 import { GuildPreviewComponent } from './shared/guild-preview/guild-preview.component';
 import { CharacterPreviewComponent } from './shared/character-preview/character-preview.component';
 import { CharacterListComponent } from './shared/character-list/character-list.component';
-import { ShowAuthedDirective } from './shared/show-authed.directive';
+import { ShowIfUserIsDirective } from './shared/show-if-user-is.directive';
+import { AuthService } from './shared/services/auth.service';
+import { HttpBackendClient } from './shared/services/http-backend.client';
+import { RefreshService } from './shared/services/refresh.service';
+import { AbstractUserComponent } from './shared/abstract-user/abstract-user.component';
+//import { StartupService } from './shared/services/startup.service';
 
 @NgModule({
   declarations: [
@@ -47,17 +52,30 @@ import { ShowAuthedDirective } from './shared/show-authed.directive';
     GuildPreviewComponent,
     CharacterPreviewComponent,
     CharacterListComponent,
-    ShowAuthedDirective
+    ShowIfUserIsDirective,
+    AbstractUserComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true }
+    RefreshService,
+    {
+      provide: APP_INITIALIZER,
+      deps: [RefreshService],
+      useFactory: (refreshService: RefreshService) =>
+        () => refreshService.beforeAppBootstraps(),
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

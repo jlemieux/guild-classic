@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from './shared/services/auth.service';
+//import { AuthService } from './shared/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +13,6 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    //this.authService.populate();
+    //this.authService.getUser();
   }
 }

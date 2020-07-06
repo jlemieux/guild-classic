@@ -1,14 +1,14 @@
 import { Directive, TemplateRef, ViewContainerRef, OnDestroy, OnInit, Input } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Directive({
-  selector: '[appShowAuthed]'
+  selector: '[appShowIfUserIs]'
 })
-export class ShowAuthedDirective implements OnInit, OnDestroy {
+export class ShowIfUserIsDirective implements OnInit {
 
-  @Input() appShowAuthed: boolean;
-  private userSub: Subscription;
+  @Input() appShowIfUserIs: boolean;
 
   constructor(
     private templateRef: TemplateRef<any>,
@@ -17,19 +17,17 @@ export class ShowAuthedDirective implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.userSub = this.authService.currentUser$.subscribe(user => {
-      const isAuth: boolean = !!user.token;
-      if (isAuth && this.appShowAuthed || !isAuth && !this.appShowAuthed) {
+    this.authService.currentUser$.pipe(take(1)).subscribe(user => {
+      const isAuth: boolean = user !== null;
+      if (isAuth && this.appShowIfUserIs || !isAuth && !this.appShowIfUserIs) {
+        console.log("creating a new embedded view container");
         this.viewContainer.createEmbeddedView(this.templateRef);
       }
       else {
+        console.log("clearning the view container");
         this.viewContainer.clear();
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.userSub.unsubscribe();
   }
 
 }
