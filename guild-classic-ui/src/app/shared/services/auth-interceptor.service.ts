@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler } from '@angular/common/http';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { exhaustMap, take, switchMap, tap } from 'rxjs/operators';
 import { User } from '../models/user.model';
@@ -23,9 +23,10 @@ export class AuthInterceptorService implements HttpInterceptor {
         if (user !== null) {
           headersConfig['Authorization'] = `Bearer ${user.token}`;
         }
-        return next.handle(
-          req.clone({ withCredentials: true, setHeaders: headersConfig })
-        );
+        return next.handle(req.clone({
+          withCredentials: true,
+          headers: new HttpHeaders(environment.requestHeaders)
+        }));
       })
     );
     

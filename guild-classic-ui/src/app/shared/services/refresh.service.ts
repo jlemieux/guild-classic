@@ -30,22 +30,22 @@ export class RefreshService implements OnDestroy {
   }
 
   private startRefreshLoop(): void {
-    this.sub.add(timer(environment.refreshInterval, environment.refreshInterval).pipe(
-      exhaustMap((t: number) => this.buildRefreshRequest())
-    ).subscribe(
-      (user: User) => this.refreshedSubject.next(user),
-      (err) => this.refreshedSubject.next(null)
-    ));
+    this.sub.add(
+      timer(environment.refreshInterval, environment.refreshInterval)
+      .pipe(exhaustMap((t: number) => this.buildRefreshRequest()))
+      .subscribe(
+        (user: User) => this.refreshedSubject.next(user),
+        (err) => this.refreshedSubject.next(null)
+      )
+    );
   }
 
   stopRefreshLoop(): void {
-    console.log("inside stopRefreshLoop, unsubbing and making new sub");
     this.sub.unsubscribe();
     this.sub = new Subscription();
   }
 
   restartRefreshLoop(): void {
-    console.log("inside RESTART");
     this.stopRefreshLoop();
     this.startRefreshLoop();
   }
